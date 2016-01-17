@@ -6,11 +6,11 @@ require 'time_ago_in_words'
 token = ENV['CADAM_BOT_TOKEN']
 
 Telegram::Bot::Client.run(token) do |bot|
-
   bot.listen do |message|
-    if message.text.start_with?('/')
-      command = message.text
-      case command
+    begin
+      if message.text.start_with?('/')
+        command = message.text
+        case command
         when /^\/recent/
           command = command.split(' ')[1..-1].join(' ')
           search_count = command.length > 0 ? command : 5
@@ -28,9 +28,12 @@ Telegram::Bot::Client.run(token) do |bot|
           end
 
           bot.api.send_message(chat_id: message.chat.id, text: formatted_result)
+        end
+      else
+        # listening at messages
       end
-    else
-      # listening at messages
+    rescue
+      puts 'something went wrong'
     end
   end
 end
