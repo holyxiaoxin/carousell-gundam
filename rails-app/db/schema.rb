@@ -11,18 +11,36 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 20160115083046) do
+ActiveRecord::Schema.define(version: 20160117103218) do
 
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
 
   create_table "gundams", force: :cascade do |t|
-    t.string   "title"
     t.integer  "carousell_id"
+    t.string   "title"
+    t.string   "price"
     t.text     "description"
     t.string   "location_address"
     t.string   "location_name"
     t.datetime "time_created"
   end
 
+  create_table "notified_gundams", force: :cascade do |t|
+    t.integer "carousell_id"
+  end
+
+  create_table "tags", force: :cascade do |t|
+    t.integer "watchlist_id"
+    t.string  "tag"
+  end
+
+  add_index "tags", ["watchlist_id"], name: "index_tags_on_watchlist_id", using: :btree
+
+  create_table "watchlists", force: :cascade do |t|
+    t.string   "chat_id"
+    t.datetime "last_notified"
+  end
+
+  add_foreign_key "tags", "watchlists"
 end

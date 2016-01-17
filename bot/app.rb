@@ -1,3 +1,8 @@
+# /setcommands
+# recent - Retrieve 5 most recent listings. To retrieve more use: /recent 15.
+# watch - Subscribe to all gundam listings.
+# stop - Unsubscribe to all gundam listings.
+
 require 'telegram/bot'
 require 'httparty'
 require 'json'
@@ -20,14 +25,36 @@ Telegram::Bot::Client.run(token) do |bot|
           response = JSON.parse(response.body)
           results = response['result']['products']
 
-          formatted_result = ""
+          bot_reply = ""
           results = results.map.with_index do |r, index|
-            formatted_result += "#{index+1}. \n[Title]: #{r['title']}\n"
-            formatted_result += "[Price]: $#{r['price']}\n"
-            formatted_result += "#{Time.parse(r['time_created']).ago_in_words}\n"
+            bot_reply += "#{index+1}. \n[Title]: #{r['title']}\n"
+            bot_reply += "[Price]: $#{r['price']}\n"
+            bot_reply += "#{Time.parse(r['time_created']).ago_in_words}\n"
           end
 
-          bot.api.send_message(chat_id: message.chat.id, text: formatted_result)
+          bot.api.send_message(chat_id: message.chat.id, text: bot_reply)
+
+        when /^\/watch/
+          rails_app_uri = URI('http://localhost:3000/watchlists')
+
+          post_data = { chat_id: message.chat.id }
+
+          response = HTTParty.post(rails_app_uri, { body: post_data })
+          response = JSON.parse(response.body) if response.code == 200
+
+          bot_reply = "You are now watching all gundam carousell listings.\n"
+          bot_reply += 'Showing recent listings...'
+
+          bot.api.send_message(chat_id: message.chat.id, text: bot_reply)
+
+        when '/stop'
+          rails_app_uri = URI("http://localhost:3000/watchlists/#{message.chat.id}")
+          response = HTTParty.delete(rails_app_uri)
+          response = JSON.parse(response.body) if response.code == 200
+
+          bot_reply = 'You have stopped watching.'
+
+          bot.api.send_message(chat_id: message.chat.id, text: bot_reply)
         end
       else
         # listening at messages

@@ -5,6 +5,12 @@ Rails.application.routes.draw do
       get 'recent'
     end
   end
+
+  resources :watchlists do
+    collection do
+      get 'notify'
+    end
+  end
   # The priority is based upon order of creation: first created -> highest priority.
   # See how all your routes lay out with "rake routes".
 
