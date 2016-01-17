@@ -17,11 +17,12 @@ ActiveRecord::Schema.define(version: 20160115083046) do
   enable_extension "plpgsql"
 
   create_table "gundams", force: :cascade do |t|
-    t.string  "title"
-    t.integer "carousell_id"
-    t.text    "description"
-    t.string  "location_address"
-    t.string  "location_name"
+    t.string   "title"
+    t.integer  "carousell_id"
+    t.text     "description"
+    t.string   "location_address"
+    t.string   "location_name"
+    t.datetime "time_created"
   end
 
 end

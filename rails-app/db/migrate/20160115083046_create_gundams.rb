@@ -6,6 +6,7 @@ class CreateGundams < ActiveRecord::Migration
       t.text :description
       t.string :location_address
       t.string :location_name
+      t.datetime :time_created
     end
   end
 end

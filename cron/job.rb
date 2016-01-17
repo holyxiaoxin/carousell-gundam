@@ -38,6 +38,7 @@ results.each do |p|
     title: p['title'],
     carousell_id: p['id'],
     description: p['description'],
+    time_created: p['time_created'],
     location_address: p['location_address'],
     location_name: p['location_name']
   }

@@ -29,6 +29,6 @@ class GundamsController < ApplicationController
 
   private
   def safe_params
-    params.require(:gundams).map { |g| g.permit(:title, :carousell_id, :description, :location_address, :location_name) }
+    params.require(:gundams).map { |g| g.permit(:title, :carousell_id, :description, :location_address, :location_name, :time_created) }
   end
 end
