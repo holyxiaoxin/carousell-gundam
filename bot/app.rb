@@ -9,6 +9,7 @@ require 'json'
 require 'time_ago_in_words'
 
 token = ENV['CADAM_BOT_TOKEN']
+RAILS_BASE_URL = ENV['CADAM_BOT_RAILS_URL']
 
 Telegram::Bot::Client.run(token) do |bot|
   bot.listen do |message|
@@ -35,7 +36,7 @@ Telegram::Bot::Client.run(token) do |bot|
           bot.api.send_message(chat_id: message.chat.id, text: bot_reply)
 
         when /^\/watch/
-          rails_app_uri = URI('http://localhost:3000/watchlists')
+          rails_app_uri = URI("#{RAILS_BASE_URL}/watchlists")
 
           post_data = { chat_id: message.chat.id }
 
@@ -48,7 +49,7 @@ Telegram::Bot::Client.run(token) do |bot|
           bot.api.send_message(chat_id: message.chat.id, text: bot_reply)
 
         when '/stop'
-          rails_app_uri = URI("http://localhost:3000/watchlists/#{message.chat.id}")
+          rails_app_uri = URI("#{RAILS_BASE_URL}/watchlists/#{message.chat.id}")
           response = HTTParty.delete(rails_app_uri)
           response = JSON.parse(response.body) if response.code == 200
 

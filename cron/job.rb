@@ -30,7 +30,7 @@ class GundamJob
     # Instance variables
     @token = ENV['CADAM_BOT_TOKEN']
     @search_count = 5
-    @origin_path = 'http://localhost:3000'
+    @origin_path = ENV['CADAM_BOT_RAILS_URL']
   end
 
   def update
