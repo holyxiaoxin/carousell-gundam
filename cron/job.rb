@@ -58,22 +58,26 @@ class GundamJob
       watchlists = response['watchlists']
       tags = response['tags']
 
-      Telegram::Bot::Client.run(@token) do |bot|
-        watchlists.each do |w|
-          chat_id = w['chat_id']
-          gundams.each do |g|
-            w_tags = tags[chat_id]
+      begin
+        Telegram::Bot::Client.run(@token) do |bot|
+          watchlists.each do |w|
+            chat_id = w['chat_id']
+            gundams.each do |g|
+              w_tags = tags[chat_id]
 
-            if w_tags.empty? || w_tags.any? { |t| g['title'].downcase.include?(t['tag'].downcase) }
-              gundam = "[Title]: #{g['title']}\n"
-              gundam += "[Price]: $#{g['price']}\n"
-              gundam += "[URL]: https://carousell.com/p/#{g['id']}"
+              if w_tags.empty? || w_tags.any? { |t| g['title'].downcase.include?(t['tag'].downcase) }
+                gundam = "[Title]: #{g['title']}\n"
+                gundam += "[Price]: $#{g['price']}\n"
+                gundam += "[URL]: https://carousell.com/p/#{g['id']}"
 
-              bot.api.send_message(chat_id: chat_id, text: gundam)
+                bot.api.send_message(chat_id: chat_id, text: gundam)
+              end
+
             end
-
           end
         end
+      rescue => error
+        puts 'something went wrong', error
       end
 
       @last_update = Time.parse(gundams.first['time_created']) unless gundams.empty?

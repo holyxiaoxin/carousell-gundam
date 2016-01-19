@@ -1,6 +1,7 @@
 # /setcommands
-# recent - Retrieve 5 most recent listings. To retrieve more use: /recent 15.
-# watch - Subscribe to all gundam listings.
+# recent - Retrieve 5 most recent listings. To retrieve more, use: /recent 15.
+# watch - Subscribe to all gundam listings. To subscribe by tag, use: /watch art.
+# watch_continued - To watch more than one tag, seperate by space, use: /watch exia burning.
 # stop - Unsubscribe to all gundam listings.
 
 require 'telegram/bot'
