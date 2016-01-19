@@ -36,10 +36,10 @@ class GundamJob
   def notify
     puts 'start: notify'
     gundams = []
-    notified = []
+    watchlists = []
 
     carousell_uri = URI("https://carousell.com/ui/iso/api;path=%2Fproducts%2Fsearch%2F;query=%7B%22count%22%3A#{@search_count}%2C%22start%22%3A0%2C%22sort%22%3A%22recent%22%2C%22query%22%3A%22gundam%22%7D")
-    rails_endpoint_uri = URI("#{@origin_path}/watchlists/notify")
+    rails_endpoint_uri = URI("#{@origin_path}/watchlists")
 
     response = HTTParty.get(carousell_uri)
 
@@ -57,11 +57,11 @@ class GundamJob
 
     if response.code == 200
       response = JSON.parse(response.body)
-      notified = response['notified']
+      watchlists = response['watchlists']
 
       Telegram::Bot::Client.run(@token) do |bot|
-        notified.each do |n|
-          chat_id = n.keys.first
+        watchlists.each do |w|
+          chat_id = w['chat_id']
           gundams.each do |g|
             gundam = "[Title]: #{g['title']}\n"
             gundam += "[Price]: $#{g['price']}\n"
@@ -79,5 +79,5 @@ class GundamJob
   end
 end
 
-# gundam_job = GundamJob.new
-# gundam_job.notify
+gundam_job = GundamJob.new
+gundam_job.notify
