@@ -47,9 +47,7 @@ class GundamJob
       response = JSON.parse(response.body)
       results = response['result']['products']
 
-      gundams = results.map do |g|
-        g if Time.parse(g['time_created']) > @last_update
-      end
+      gundams = results.map { |g| g if Time.parse(g['time_created']) > @last_update }
       gundams.compact!
     end
 
@@ -58,16 +56,22 @@ class GundamJob
     if response.code == 200
       response = JSON.parse(response.body)
       watchlists = response['watchlists']
+      tags = response['tags']
 
       Telegram::Bot::Client.run(@token) do |bot|
         watchlists.each do |w|
           chat_id = w['chat_id']
           gundams.each do |g|
-            gundam = "[Title]: #{g['title']}\n"
-            gundam += "[Price]: $#{g['price']}\n"
-            gundam += "[URL]: https://carousell.com/p/#{g['id']}"
+            w_tags = tags[chat_id]
 
-            bot.api.send_message(chat_id: chat_id, text: gundam)
+            if w_tags.empty? || w_tags.any? { |t| g['title'].downcase.include?(t['tag'].downcase) }
+              gundam = "[Title]: #{g['title']}\n"
+              gundam += "[Price]: $#{g['price']}\n"
+              gundam += "[URL]: https://carousell.com/p/#{g['id']}"
+
+              bot.api.send_message(chat_id: chat_id, text: gundam)
+            end
+
           end
         end
       end
@@ -79,5 +83,5 @@ class GundamJob
   end
 end
 
-gundam_job = GundamJob.new
-gundam_job.notify
+# gundam_job = GundamJob.new
+# gundam_job.notify
