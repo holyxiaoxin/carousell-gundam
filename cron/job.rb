@@ -67,9 +67,6 @@ class GundamJob
             gundam += "[Price]: $#{g['price']}\n"
             gundam += "[URL]: https://carousell.com/p/#{g['id']}"
 
-            puts chat_id
-            puts gundams.inspect
-
             bot.api.send_message(chat_id: chat_id, text: gundam)
           end
         end
