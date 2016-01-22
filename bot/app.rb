@@ -18,9 +18,11 @@ class String
   end
 end
 
-Telegram::Bot::Client.run(token) do |bot|
-  bot.listen do |message|
-    begin
+begin
+  Telegram::Bot::Client.run(token) do |bot|
+    puts GC.stat
+    bot.listen do |message|
+
       if message.text.start_with?('/')
         command = message.text
         case command
@@ -65,8 +67,6 @@ Telegram::Bot::Client.run(token) do |bot|
             end
           end
 
-          puts post_data
-
           response = HTTParty.post(rails_app_uri, { body: post_data })
           response = JSON.parse(response.body) if response.code == 200
 
@@ -91,8 +91,8 @@ Telegram::Bot::Client.run(token) do |bot|
       else
         # listening at messages
       end
-    rescue => error
-      puts 'something went wrong', error
     end
   end
+rescue => error
+  puts 'something went wrong', error
 end
