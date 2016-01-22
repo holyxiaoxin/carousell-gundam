@@ -20,9 +20,8 @@ end
 
 begin
   Telegram::Bot::Client.run(token) do |bot|
-    puts GC.stat
     bot.listen do |message|
-
+      puts GC.stat
       if message.text.start_with?('/')
         command = message.text
         case command
