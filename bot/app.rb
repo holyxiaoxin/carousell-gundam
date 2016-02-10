@@ -18,10 +18,9 @@ class String
   end
 end
 
-begin
-  Telegram::Bot::Client.run(token) do |bot|
+Telegram::Bot::Client.run(token) do |bot|
+  begin
     bot.listen do |message|
-      puts GC.stat
       if message.text.start_with?('/')
         command = message.text
         case command
@@ -91,7 +90,7 @@ begin
         # listening at messages
       end
     end
+  rescue => error
+    puts 'something went wrong', error
   end
-rescue => error
-  puts 'something went wrong', error
 end
