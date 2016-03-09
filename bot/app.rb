@@ -19,8 +19,8 @@ class String
 end
 
 Telegram::Bot::Client.run(token) do |bot|
-  begin
-    bot.listen do |message|
+  bot.listen do |message|
+    begin
       if message.text.start_with?('/')
         command = message.text
         case command
@@ -89,8 +89,8 @@ Telegram::Bot::Client.run(token) do |bot|
       else
         # listening at messages
       end
+    rescue => error
+      puts 'something went wrong', error
     end
-  rescue => error
-    puts 'something went wrong', error
   end
 end
