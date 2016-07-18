@@ -1,6 +1,9 @@
 class AdminController < ApplicationController
   def watchlists_index
-    return render json: { status: 'fail' }, status: :unauthorized if params[:key] != ENV['CAROUSELL_GUNDAM_ADMIN_PASSWORD']
+    if (!params[:key] || params[:key] != ENV['CAROUSELL_GUNDAM_ADMIN_PASSWORD'])
+      return render json: { status: 'fail' }, status: :unauthorized
+    end
+
     watchlists = Watchlist.all
     tags = {}
     watchlists.each do |w|
