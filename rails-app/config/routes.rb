@@ -1,5 +1,6 @@
 Rails.application.routes.draw do
   resources :watchlists, :constraints => {:ip => /127.0.0.1/}
+  get "/admin/watchlists" => "admin#watchlists_index"
   # The priority is based upon order of creation: first created -> highest priority.
   # See how all your routes lay out with "rake routes".
 
